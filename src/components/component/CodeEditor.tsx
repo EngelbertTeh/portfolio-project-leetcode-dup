@@ -1,6 +1,5 @@
 'use client';
 import { FormEvent, useRef, useState } from 'react';
-import { useSWRConfig } from 'swr';
 interface SubmissionBody {
   lang: string;
   source: string;
@@ -11,7 +10,6 @@ interface SubmissionBody {
   callback: string;
 }
 function CodeEditor() {
-  const { mutate } = useSWRConfig();
   const [results, setResults] = useState<{ output: string } | undefined>(
     undefined
   );
@@ -32,7 +30,20 @@ function CodeEditor() {
     e.preventDefault();
     const data = textAreaRef.current?.value;
 
-    const JSONdata = `public class Program { public static void main ( String[] args ) { ${data} } }`;
+    const JSONdata = `import java.util.*;import java.lang.*; import java.io.*; public class Program { public static void main ( String[] args ) { 
+     
+    
+      String testData = "2\\naaeiou\\naaaaeiou";
+      InputStream in = new ByteArrayInputStream(testData.getBytes());
+      System.setIn(in);
+
+
+
+      
+
+      
+    
+      ${data} } }`;
 
     submissionBody.source = JSONdata;
 
@@ -55,7 +66,7 @@ function CodeEditor() {
         return;
       }
       const result: { status_update_url: string } = await postResponse.json();
-
+      <p className="text-slate-600">class Program &#123;</p>;
       console.log(result.status_update_url);
       let getResponseData = null;
       do {
@@ -81,10 +92,6 @@ function CodeEditor() {
     } catch (error) {
       console.log(error);
     }
-
-    // mutate(
-    //   'https://api.hackerearth.com/v4/partner/code-evaluation/submissions/'
-    // );
   };
   return (
     <div className="flex flex-col items-center justify-center">
@@ -93,7 +100,8 @@ function CodeEditor() {
         onSubmit={handleForm}
         className="bg-slate-200 h-[60dvh] p-2 w-[350px] sm:w-[600px] lg:w-[1000px] rounded-md relative overflow-hidden"
       >
-        <div className="h-[95%] py-2">
+        <div className="h-[95%]">
+          <p className="text-slate-600 py-2">import java.util.*; </p>
           <p className="text-slate-600">class Program &#123;</p>
           <p className="text-slate-600 px-[2rem]">
             public static void main &#40; String&#91; &#93; args &#41; &#123;
