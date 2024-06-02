@@ -10,9 +10,9 @@ interface SubmissionBody {
   callback: string;
 }
 function CodeEditor() {
-  const [results, setResults] = useState<{ output: string } | undefined>(
-    undefined
-  );
+  const [results, setResults] = useState<{ output: string }>({ output: '' });
+  const [outputTextAreaColor, setOutputTextAreaColor] =
+    useState<string>('bg-slate-200');
   const [awaitedResults, setAwaitedResults] = useState<JSON | undefined>(
     undefined
   );
@@ -29,21 +29,15 @@ function CodeEditor() {
   const handleForm = async (e: FormEvent) => {
     e.preventDefault();
     const data = textAreaRef.current?.value;
-
+    //their code here
     const JSONdata = `import java.util.*;import java.lang.*; import java.io.*; public class Program { public static void main ( String[] args ) { 
      
     
       String testData = "2\\naaeiou\\naaaaeiou";
       InputStream in = new ByteArrayInputStream(testData.getBytes());
       System.setIn(in);
-
-
-
-      
-
-      
-    
-      ${data} } }`;
+      ${data}  
+    } }`;
 
     submissionBody.source = JSONdata;
 
@@ -85,10 +79,16 @@ function CodeEditor() {
         resp = await fetch(getResponseData.result.run_status.output);
       } while (resp.status !== 200);
 
-      console.log(resp.status);
       const blob = await resp.blob();
       const text = await blob.text();
-      console.log(text.replaceAll('\n', ''));
+      const cleanText = text.replaceAll('\n', '');
+      if (cleanText === 'The answer is 2') {
+        setResults({ output: 'Correct' });
+        setOutputTextAreaColor('bg-green-200');
+      } else {
+        setResults({ output: 'Incorrect' });
+        setOutputTextAreaColor('bg-red-200');
+      }
     } catch (error) {
       console.log(error);
     }
@@ -131,12 +131,10 @@ function CodeEditor() {
       </button>
 
       <textarea
-        className={
-          'bg-slate-200 pt-4  m-[2rem] rounded-md w-full h-[300px] px-[2rem]'
-        }
+        className={`${outputTextAreaColor} pt-4  m-[2rem] rounded-md w-full h-[300px] px-[2rem]`}
         hidden={(results && JSON.stringify(results)) == null}
         disabled={true}
-        defaultValue={(results && JSON.stringify(results)) ?? ''}
+        defaultValue={results.output}
         placeholder="Output"
       ></textarea>
     </div>
