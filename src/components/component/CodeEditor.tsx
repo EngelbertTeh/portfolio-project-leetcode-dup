@@ -1,4 +1,5 @@
 'use client';
+import Loading from '@/app/loading';
 import { FormEvent, useRef, useState } from 'react';
 interface SubmissionBody {
   lang: string;
@@ -10,6 +11,7 @@ interface SubmissionBody {
   callback: string;
 }
 function CodeEditor() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [results, setResults] = useState<{ output: string }>({ output: '' });
   const [outputTextAreaColor, setOutputTextAreaColor] =
     useState<string>('bg-slate-200');
@@ -28,6 +30,8 @@ function CodeEditor() {
   };
   const handleForm = async (e: FormEvent) => {
     e.preventDefault();
+    setIsLoading(true); // loader loading
+    setOutputTextAreaColor('bg-slate-200');
     const data = textAreaRef.current?.value;
     //their code here
     const JSONdata = `import java.util.*;import java.lang.*; import java.io.*; public class Program { public static void main ( String[] args ) { 
@@ -82,11 +86,12 @@ function CodeEditor() {
       const blob = await resp.blob();
       const text = await blob.text();
       const cleanText = text.replaceAll('\n', '');
+      setIsLoading(false); // loader disappear
       if (cleanText === 'The answer is 2') {
-        setResults({ output: 'Correct' });
+        setResults({ output: 'Test cases passed' });
         setOutputTextAreaColor('bg-green-200');
       } else {
-        setResults({ output: 'Incorrect' });
+        setResults({ output: 'Failed test cases' });
         setOutputTextAreaColor('bg-red-200');
       }
     } catch (error) {
@@ -129,14 +134,23 @@ function CodeEditor() {
       >
         Submit
       </button>
-
-      <textarea
-        className={`${outputTextAreaColor} pt-4  m-[2rem] rounded-md w-full h-[300px] px-[2rem]`}
-        hidden={(results && JSON.stringify(results)) == null}
-        disabled={true}
-        defaultValue={results.output}
-        placeholder="Output"
-      ></textarea>
+      <div
+        className={`${outputTextAreaColor}   pt-4  m-[2rem] rounded-md w-full h-[300px] px-[2rem]`}
+      >
+        {isLoading ? (
+          <div className="h-full flex justify-center items-center">
+            {Loading()}
+          </div>
+        ) : (
+          <textarea
+            style={{ resize: 'none' }}
+            className=" bg-transparent"
+            disabled={true}
+            defaultValue={results.output}
+            placeholder="Output"
+          ></textarea>
+        )}
+      </div>
     </div>
   );
 }
