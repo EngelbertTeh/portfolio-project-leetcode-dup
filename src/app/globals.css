@@ -84,11 +84,19 @@
     @apply text-[var(--primary-text)] border-slate-200 border-2  shadow-[0_0_10px_5px_rgba(255,255,255,0.3)] w-[20rem] h-[20rem] flex flex-col justify-between items-center;
   }
 
-  .card > :first-child {
-    @apply flex justify-center items-center;
+  .card > :first-child ~ * {
+    @apply m-0 p-0 flex-auto;
   }
 
   .button {
     @apply bg-[var(--primary-text)] text-white;
+  }
+
+  .form {
+    @apply flex flex-col  h-full justify-between p-4;
+  }
+
+  .form > div:first-child {
+    @apply flex flex-col gap-4;
   }
 }
