@@ -28,7 +28,15 @@ function Register() {
               required
               title="Enter valid gmail address"
             />
-            <input type="password" placeholder="Password" />
+            <input
+              type="password"
+              placeholder="Password"
+              minLength={8}
+              maxLength={30}
+              pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
+              required
+              title="Enter valid password, i.e., at least 8 characters long,  include a combination of uppercase and lowercase letters, include at least one number and symbol"
+            />
             <button type="submit">Register</button>
           </form>
         </CardContent>
