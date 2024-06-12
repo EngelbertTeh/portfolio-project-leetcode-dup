@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
 }
 
 // UPDATE
-export async function updateUser(email: string, password: string) {}
+// export async function updateUser(email: string, password: string) {}
 
 // DELETE
 
