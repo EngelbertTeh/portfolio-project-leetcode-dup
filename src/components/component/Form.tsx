@@ -1,6 +1,6 @@
 function Form({ children }: { children: React.ReactNode }) {
   return (
-    <form className="form" action="api/users/">
+    <form className="form" action="api/users/" method="post">
       {children}
     </form>
   );

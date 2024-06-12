@@ -21,16 +21,16 @@ async function dropDatabase() {
 // DML
 //CREATE
 export async function POST(req: NextRequest) {
-  const data: { email: string; password: string } = await req.json();
+  const { email, password }: { email: string; password: string } =
+    await req.json();
   const salt = genSaltSync(7);
-  const hashedPassword = hashSync(data.password, salt);
-  await sql`INSERT INTO Users(email, password) VALUES(${data.email}, ${hashedPassword})`;
+  const hashedPassword = hashSync(password, salt);
+  await sql`INSERT INTO Users(email, password) VALUES(${email}, ${hashedPassword})`;
 }
 
 // RETRIEVE
 export async function GET(req: NextRequest) {
   const email = req.nextUrl.searchParams.get('email');
-  console.log(email);
   return new NextResponse(
     JSON.stringify(
       (await sql`SELECT * FROM Users WHERE email = ${email}`).at(0)
